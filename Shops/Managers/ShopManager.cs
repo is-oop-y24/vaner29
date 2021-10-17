@@ -33,11 +33,6 @@ namespace Shops.Managers // id для продуктов
             }
         }
 
-        public void AddProduct(ShopProduct product, Shop shop)
-        {
-            shop.AddProduct(product);
-        }
-
         public Shop FindShopWithBestPriceForProductList(List<CustomerProduct> shoppingList)
         {
             decimal minimumPrice = decimal.MaxValue;
@@ -70,29 +65,9 @@ namespace Shops.Managers // id для продуктов
             return curBestShop;
         }
 
-        public void ChangePriceForProductInShop(Shop shop, Product product, uint newPrice)
-        {
-            shop.ChangePriceForProduct(product, newPrice);
-        }
-
-        public void BuySingleProductInShop(Shop shop, CustomerProduct product, Customer customer)
-        {
-            shop.BuySingleProduct(product, customer);
-        }
-
-        public void BuyProductListInShop(Shop shop, List<CustomerProduct> shoppingList, Customer customer)
-        {
-            shop.BuyProductList(shoppingList, customer);
-        }
-
         public List<ShopProduct> ListAllProductsInShop(Shop shop)
         {
             return shop.ShopProducts;
-        }
-
-        public void ChangePriceForProduct(Shop shop, Product product, decimal price)
-        {
-            shop.FindShopProductInList(product).ChangeProductPrice(price);
         }
     }
 }

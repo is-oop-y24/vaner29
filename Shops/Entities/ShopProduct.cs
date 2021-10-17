@@ -7,7 +7,7 @@ namespace Shops.Entities
         private decimal _shopProductPrice;
         public ShopProduct(Product product, decimal price, uint amount)
         {
-            ShopProd = new Product(product);
+            ShopProd = product;
             ShopProductAmount = amount;
             ShopProductPrice = price;
         }
@@ -28,19 +28,19 @@ namespace Shops.Entities
 
         public uint ShopProductAmount { get; private set; }
 
-        public void ChangeProductPrice(decimal newPrice)
+        public ShopProduct ChangeProductPrice(decimal newPrice)
         {
-            ShopProductPrice = newPrice;
+            return new ShopProduct(ShopProd, newPrice, ShopProductAmount);
         }
 
-        public void DecreaseProductAmount(uint boughtAmount)
+        public ShopProduct DecreaseProductAmount(uint boughtAmount)
         {
-            ShopProductAmount -= boughtAmount;
+            return new ShopProduct(ShopProd, ShopProductPrice, ShopProductAmount - boughtAmount);
         }
 
-        public void IncreaseProductAmount(uint gotAmount)
+        public ShopProduct IncreaseProductAmount(uint gotAmount)
         {
-            ShopProductAmount += gotAmount;
+            return new ShopProduct(ShopProd, ShopProductPrice, ShopProductAmount + gotAmount);
         }
     }
 }

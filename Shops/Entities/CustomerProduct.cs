@@ -4,7 +4,7 @@
     {
         public CustomerProduct(Product product, uint amount)
         {
-            CustomerProd = new Product(product);
+            CustomerProd = product;
             CustomerProductAmount = amount;
         }
 

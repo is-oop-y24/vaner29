@@ -24,7 +24,7 @@ namespace Shops.Tests
             {
                 var spar = new Shop( Guid.NewGuid(), "Spar","Yesenina Street Caruselina House");
                 var bread = new Product(Guid.NewGuid(),"Sweet Bread");
-                _shopManager.ChangePriceForProductInShop(spar, bread, 10);
+                spar.ChangePriceForProduct(bread, 10);
             });
         }
         [Test]
@@ -34,8 +34,9 @@ namespace Shops.Tests
             {
                 var spar = new Shop(Guid.NewGuid(),"Spar", "Yesenina Street Caruselina House");
                 var bread = new Product(Guid.NewGuid(),"Sweet Bread");
-                var ant = new Customer("Anthon", 100, new List<CustomerProduct> { new CustomerProduct(bread, 1) });
-                _shopManager.BuySingleProductInShop(spar, ant.ShoppingList[0], ant);
+                var custBread = new CustomerProduct(bread, 1);
+                var ant = new Customer("Anthon", 100);
+                spar.BuySingleProduct(custBread, ref ant);
             });
         }
         
@@ -46,8 +47,9 @@ namespace Shops.Tests
             {
                 var spar = new Shop(Guid.NewGuid(),"Spar", "Yesenina Street Caruselina House");
                 var bread = new Product(Guid.NewGuid(),"Sweet Bread");
-                var ant = new Customer("Anthon", 100, new List<CustomerProduct> { new CustomerProduct(bread, 1) });
-                _shopManager.BuyProductListInShop(spar, ant.ShoppingList, ant);
+                var ant = new Customer("Anthon", 100);
+                var shoppingList = new List<CustomerProduct> {new CustomerProduct(bread, 1)};
+                spar.BuyProductList(shoppingList, ref ant);
             });
         }
         
@@ -60,9 +62,9 @@ namespace Shops.Tests
                 var bread = new Product(Guid.NewGuid(),"Sweet Bread");
                 var shopBread = new ShopProduct(bread, 1200, 100);
                 spar.AddProduct(shopBread);
-                var shoppingList = new List<CustomerProduct> {new CustomerProduct( bread ,10)};
-                var ant = new Customer("Anthon", 1000, shoppingList);
-                spar.BuySingleProduct(shoppingList[0] , ant);
+                var custBread = new CustomerProduct( bread ,10);
+                var ant = new Customer("Anthon", 1000);
+                spar.BuySingleProduct(custBread , ref ant);
             });
             
         }
@@ -77,8 +79,8 @@ namespace Shops.Tests
                 var shopBread = new ShopProduct(bread, 10, 1);
                 spar.AddProduct(shopBread);
                 var shoppingList = new List<CustomerProduct> { new CustomerProduct(bread, 10) };
-                var ant = new Customer("Anthon", 1000, shoppingList);
-                spar.BuySingleProduct(shoppingList[0], ant);
+                var ant = new Customer("Anthon", 1000);
+                spar.BuySingleProduct(shoppingList[0], ref ant);
             });
         }
         [Test]
@@ -163,8 +165,45 @@ namespace Shops.Tests
             var bread = new Product(Guid.NewGuid(),"Cheap Bread");
             var cheapBread = new ShopProduct(bread, 10, 1);
             spar.AddProduct(cheapBread);
-            spar.FindShopProductInList(bread).ChangeProductPrice(100);
+            spar.ChangePriceForProduct(bread, 100);
             Assert.AreEqual(100, spar.FindShopProductInList(bread).ShopProductPrice);
+        }
+        
+        [Test]
+        public void BuyProductCheckChangedCash()
+        {
+            var spar = new Shop(Guid.NewGuid(),"Spar", "Yesenina Street Caruselina House");
+            var bread = new Product(Guid.NewGuid(),"Cheap Bread");
+            var cheapBread = new ShopProduct(bread, 10, 1);
+            spar.AddProduct(cheapBread);
+            var shoppingList = new List<CustomerProduct> { new CustomerProduct(bread, 1) };
+            var gleb = new Customer("gleb", 1000);
+            spar.BuyProductList(shoppingList, ref gleb);
+            Assert.AreEqual(990, gleb.Cash);
+        }
+        [Test]
+        public void BuyProductCheckChangedAmount()
+        {
+            var spar = new Shop(Guid.NewGuid(),"Spar", "Yesenina Street Caruselina House");
+            var bread = new Product(Guid.NewGuid(),"Cheap Bread");
+            var cheapBread = new ShopProduct(bread, 10, 100);
+            spar.AddProduct(cheapBread);
+            var shoppingList = new List<CustomerProduct> { new CustomerProduct(bread, 1) };
+            var gleb = new Customer("gleb", 1000);
+            spar.BuyProductList(shoppingList, ref gleb);
+            Assert.AreEqual(99, spar.FindShopProductInList(bread).ShopProductAmount);
+        }
+        [Test]
+        public void BuyAllProductCheckGone()
+        {
+            var spar = new Shop(Guid.NewGuid(),"Spar", "Yesenina Street Caruselina House");
+            var bread = new Product(Guid.NewGuid(),"Cheap Bread");
+            var cheapBread = new ShopProduct(bread, 1, 100);
+            spar.AddProduct(cheapBread);
+            var shoppingList = new List<CustomerProduct> { new CustomerProduct(bread, 100) };
+            var gleb = new Customer("gleb", 1000);
+            spar.BuyProductList(shoppingList, ref gleb);
+            CollectionAssert.DoesNotContain(spar.ShopProducts, cheapBread);
         }
 
     }

@@ -4,20 +4,18 @@ namespace Shops.Entities
 {
     public class Customer
     {
-        public Customer(string name, decimal cash, List<CustomerProduct> shoppinglist)
+        public Customer(string name, decimal cash)
         {
             Name = name;
             Cash = cash;
-            ShoppingList = shoppinglist;
         }
 
         public string Name { get; }
-        public decimal Cash { get; private set; }
-        public List<CustomerProduct> ShoppingList { get; }
+        public decimal Cash { get; }
 
-        public void SpendMoney(decimal price)
+        public Customer SpendMoney(decimal price)
         {
-            Cash -= price;
+            return new Customer(Name, Cash - price);
         }
     }
 }

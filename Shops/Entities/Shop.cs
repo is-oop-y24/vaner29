@@ -22,8 +22,9 @@ namespace Shops.Entities
         {
             if (ShopProducts.Contains(shopProd))
             {
-                FindShopProductInList(shopProd.ShopProd).IncreaseProductAmount(shopProd.ShopProductAmount);
-                FindShopProductInList(shopProd.ShopProd).ChangeProductPrice(shopProd.ShopProductPrice);
+                uint prevAmount = FindShopProductInList(shopProd.ShopProd).ShopProductAmount;
+                ShopProducts.Remove(shopProd);
+                ShopProducts.Add(shopProd.IncreaseProductAmount(prevAmount));
             }
             else
             {
@@ -49,21 +50,23 @@ namespace Shops.Entities
 
         public void ChangePriceForProduct(Product product, decimal price)
         {
-            FindShopProductInList(product).ChangeProductPrice(price);
+            ShopProduct newProd = FindShopProductInList(product).ChangeProductPrice(price);
+            ShopProducts.Remove(FindShopProductInList(product));
+            ShopProducts.Add(newProd);
         }
 
-        public void BuySingleProduct(CustomerProduct product, @Customer customer)
+        public void BuySingleProduct(CustomerProduct product, ref Customer customer)
         {
             decimal productPrice = TotalPriceForProductBatch(product);
             if (productPrice == decimal.MaxValue)
                 throw new ShopException("Not Enough Product In Shop");
             if (productPrice > customer.Cash)
                 throw new ShopException("Customer Does Not Have Enough Money");
-            customer.SpendMoney(productPrice);
+            customer = customer.SpendMoney(productPrice);
             RemoveSingleProductFromShop(product);
         }
 
-        public void BuyProductList(List<CustomerProduct> shoppingList, @Customer customer)
+        public void BuyProductList(List<CustomerProduct> shoppingList, ref Customer customer)
         {
             decimal totalPrice = 0;
             foreach (CustomerProduct product in shoppingList)
@@ -76,7 +79,7 @@ namespace Shops.Entities
 
             if (totalPrice > customer.Cash)
                 throw new ShopException("Customer Does Not Have Enough Money");
-            customer.SpendMoney(totalPrice);
+            customer = customer.SpendMoney(totalPrice);
             RemoveProductListFromShop(shoppingList);
         }
 
@@ -97,7 +100,11 @@ namespace Shops.Entities
             }
             else if (product.ShopProductAmount > customerProduct.CustomerProductAmount)
             {
-                product.DecreaseProductAmount(customerProduct.CustomerProductAmount);
+                uint boughtAmount = customerProduct.CustomerProductAmount;
+                ShopProduct boughtProduct = FindShopProductInList(customerProduct.CustomerProd)
+                    .DecreaseProductAmount(boughtAmount);
+                ShopProducts.Remove(FindShopProductInList(customerProduct.CustomerProd));
+                ShopProducts.Add(boughtProduct);
             }
         }
 
