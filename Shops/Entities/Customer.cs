@@ -12,10 +12,5 @@ namespace Shops.Entities
 
         public string Name { get; }
         public decimal Cash { get; }
-
-        public Customer SpendMoney(decimal price)
-        {
-            return new Customer(Name, Cash - price);
-        }
     }
 }

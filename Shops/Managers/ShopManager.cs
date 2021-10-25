@@ -9,10 +9,16 @@ namespace Shops.Managers // id для продуктов
     {
         private List<Shop> _shops = new ();
         private List<Product> _products = new ();
+        private List<Customer> _customers = new ();
 
         public void RegisterProduct(Product product)
         {
             _products.Add(product);
+        }
+
+        public void RegisterCustomer(Customer customer)
+        {
+            _customers.Add(customer);
         }
 
         public void RegisterShop(Shop shop)

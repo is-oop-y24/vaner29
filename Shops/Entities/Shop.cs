@@ -55,18 +55,17 @@ namespace Shops.Entities
             ShopProducts.Add(newProd);
         }
 
-        public void BuySingleProduct(CustomerProduct product, ref Customer customer)
+        public void BuySingleProduct(CustomerProduct product, Customer customer)
         {
             decimal productPrice = TotalPriceForProductBatch(product);
             if (productPrice == decimal.MaxValue)
                 throw new ShopException("Not Enough Product In Shop");
             if (productPrice > customer.Cash)
                 throw new ShopException("Customer Does Not Have Enough Money");
-            customer = customer.SpendMoney(productPrice);
             RemoveSingleProductFromShop(product);
         }
 
-        public void BuyProductList(List<CustomerProduct> shoppingList, ref Customer customer)
+        public void BuyProductList(List<CustomerProduct> shoppingList, Customer customer)
         {
             decimal totalPrice = 0;
             foreach (CustomerProduct product in shoppingList)
@@ -79,7 +78,6 @@ namespace Shops.Entities
 
             if (totalPrice > customer.Cash)
                 throw new ShopException("Customer Does Not Have Enough Money");
-            customer = customer.SpendMoney(totalPrice);
             RemoveProductListFromShop(shoppingList);
         }
 
