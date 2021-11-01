@@ -1,23 +1,25 @@
-﻿namespace Isu.Entities
+﻿using System;
+using System.Collections.Generic;
+using Isu.Tools;
+
+namespace Isu.Entities
 {
     public class Student
     {
-        private static int _currentId = 0;
-        public Student(string name, string groupName)
+        public Student(string name, Guid id, Guid groupId)
         {
-            _currentId++;
-            Id = _currentId;
+            Id = id;
             Name = name;
-            GroupName = groupName;
+            GroupId = groupId;
         }
 
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public string Name { get; private set; }
-        public string GroupName { get; private set;  }
+        public Guid GroupId { get; private set;  }
 
-        public void Transfer(string newGroupName)
+        public Student Transfer(Guid newGroupId)
         {
-            GroupName = newGroupName;
+            return new Student(this.Name, Id, newGroupId);
         }
     }
 }

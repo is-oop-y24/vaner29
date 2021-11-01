@@ -1,3 +1,4 @@
+using System.Linq;
 using Isu.Entities;
 using Isu.Services;
 using Isu.Tools;
@@ -20,8 +21,7 @@ namespace Isu.Tests
         {
             Group testGroup = _isuService.AddGroup("M3202");
             Student testStudent = _isuService.AddStudent(testGroup,"Anthony Blink");
-            Assert.Contains(testStudent, testGroup.Students);
-            Assert.AreEqual(testStudent.GroupName, testGroup.NameProperty);
+            Assert.AreEqual(testStudent.GroupId, testGroup.Id);
         }
 
         [Test]
@@ -56,9 +56,9 @@ namespace Isu.Tests
             Group testGroup2 = _isuService.AddGroup("M3299");
             Student testStudent = _isuService.AddStudent(testGroup1,"Anthony Blink");
             _isuService.ChangeStudentGroup(testStudent, testGroup2);
-            Assert.Contains(testStudent, testGroup2.Students);
-            Assert.AreEqual(testStudent.GroupName, testGroup2.NameProperty);
-            
+            _isuService.Students.Contains(testStudent);
+            Assert.AreEqual(_isuService.Students.FirstOrDefault(student => student.Id == testStudent.Id).GroupId, testGroup2.Id);
+
         }
     }
 }
