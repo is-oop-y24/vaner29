@@ -21,6 +21,7 @@ namespace Backups.Tests
         public void TwoFilesSplit_Restore_DeleteFile_Restore_CheckAmount()
         {
             _backupJob.SetStorageType(new SplitStorage());
+            _backupJob.SetRepositoryType(new RepositoryNoFiles());
             var file1 = new JobObject("file1.txt");
             var file2 = new JobObject("file2.bmp");
             _backupJob.AddMultipleFilesToJobObjects(new List<JobObject>(){file1, file2});
@@ -28,11 +29,7 @@ namespace Backups.Tests
             _backupJob.RemoveFileFromJobObjects(file2);
             _backupJob.CreateRestorePoint();
             Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
-            int storageAmount = 0;
-            foreach (var point in _backupJob.GetRestorePoints())
-            {
-                storageAmount += point.Rep.GetStorages().Count;
-            }
+            int storageAmount = _backupJob.GetRestorePoints().Sum(point => point.Rep.GetStorages().Count);
             Assert.AreEqual(3, storageAmount);
         }
 
@@ -40,6 +37,7 @@ namespace Backups.Tests
         public void TwoFilesSingle_Restore_DeleteFile_Restore_CheckAmount()
         {
             _backupJob.SetStorageType(new SingleStorage());
+            _backupJob.SetRepositoryType(new RepositoryNoFiles());
             var file1 = new JobObject("file1.txt");
             var file2 = new JobObject("file2.bmp");
             _backupJob.AddMultipleFilesToJobObjects(new List<JobObject>(){file1, file2});
@@ -47,46 +45,26 @@ namespace Backups.Tests
             _backupJob.RemoveFileFromJobObjects(file2);
             _backupJob.CreateRestorePoint();
             Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
-            int storageAmount = 0;
-            foreach (var point in _backupJob.GetRestorePoints())
-            {
-                storageAmount += point.Rep.GetStorages().Count;
-            }
+            int storageAmount = _backupJob.GetRestorePoints().Sum(point => point.Rep.GetStorages().Count);
             Assert.AreEqual(2, storageAmount);
         }
-
-      /*  [Test]
-        public void ChangeBackupDirectory_CheckItWorkjed()
-        {
-            _backupJob.SetStorageType(new SingleStorage());
-            var file1 = new JobObject("file1.txt");
-            var file2 = new JobObject("file2.bmp");
-            _backupJob.AddFileToJobObjects(file1);
-            _backupJob.CreateRestorePoint();
-            _backupJob.ChangeRepository(@"D:\Mono\bin");
-            _backupJob.CreateRestorePoint();
-            Assert.AreEqual(@"C:\Users\PC\Repository",
-                Path.GetDirectoryName(_backupJob.GetRestorePoints()[0].Rep.GetStorages()[0].GetFiles()[0].Name));
-            Assert.AreEqual(@"D:\Mono\bin\Repository",
-                Path.GetDirectoryName(_backupJob.GetRestorePoints()[1].Rep.GetStorages()[0].GetFiles()[0].Name));
-        } */
 
         [Test]
         public void CreateRestorePointWithNoFiles_ThrowException()
         {
+            _backupJob.SetStorageType(new SingleStorage());
             Assert.Catch<BackupsException>(() =>
             {
-                _backupJob.SetStorageType(new SingleStorage());
                 _backupJob.CreateRestorePoint();
             });
         }
         [Test]
         public void RemoveFileWithNoFilesAdded_ThrowException()
         {
+            _backupJob.SetStorageType(new SingleStorage());
+            var file1 = new JobObject("file1.txt");
             Assert.Catch<BackupsException>(() =>
             {
-                _backupJob.SetStorageType(new SingleStorage());
-                var file1 = new JobObject("file1.txt");
                 _backupJob.RemoveFileFromJobObjects(file1);
             });
         }

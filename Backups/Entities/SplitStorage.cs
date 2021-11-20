@@ -7,15 +7,15 @@ namespace Backups.Entities
 {
     public class SplitStorage : IStorageType
     {
-        public List<Storage> CreateStorages(List<JobObject> files, Guid id, string path)
+        public List<Storage> CreateStorages(List<JobObject> files, string path)
         {
             var storages = new List<Storage>();
             foreach (var curFile in files)
             {
-                string name = Path.GetFileName(curFile.Name);
-                name = path + @"\Storage_" + id + "_" + name;
-                var curStorage = new Storage();
-                curStorage = curStorage.AddFileToStorage(new JobObject(name));
+                var id = Guid.NewGuid();
+                string archivePath = path + $"{Path.DirectorySeparatorChar}" + id + ".zip";
+                var curStorage = new Storage(archivePath);
+                curStorage = curStorage.AddFileToStorage(curFile);
                 storages.Add(curStorage);
             }
 

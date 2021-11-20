@@ -6,6 +6,6 @@ namespace Backups.Services
 {
     public interface IStorageType
     {
-        List<Storage> CreateStorages(List<JobObject> files, Guid id, string path);
+        List<Storage> CreateStorages(List<JobObject> files, string path);
     }
 }

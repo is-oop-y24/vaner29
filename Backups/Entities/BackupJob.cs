@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Backups.Services;
 using Backups.Tools;
 
@@ -7,9 +8,10 @@ namespace Backups.Entities
 {
     public class BackupJob
     {
-        private string _path = @"C:\Users\PC\Repository";
+        private string _path = @"C:\Users\PC\BackUpJob";
         private List<RestorePoint> _restorePoints;
         private IStorageType _storageType;
+        private IRepositoryType _repositoryType;
 
         public BackupJob()
         {
@@ -19,16 +21,11 @@ namespace Backups.Entities
 
         public List<JobObject> FileList { get; private set; }
 
-        public void ChangeRepository(string newPath)
-        {
-            _path = newPath + @"\Repository";
-        }
-
         public void CreateRestorePoint()
         {
             if (FileList.Count == 0)
                 throw new BackupsException("No files exist");
-            _restorePoints.Add(new RestorePoint(FileList, _storageType, Guid.NewGuid(), _path));
+            _restorePoints.Add(new RestorePoint(FileList, _storageType, _repositoryType, Guid.NewGuid(), _path));
         }
 
         public List<RestorePoint> GetRestorePoints()
@@ -39,6 +36,11 @@ namespace Backups.Entities
         public void SetStorageType(IStorageType storageType)
         {
             _storageType = storageType ?? throw new BackupsException("Invalid Storage Type");
+        }
+
+        public void SetRepositoryType(IRepositoryType repositoryType)
+        {
+            _repositoryType = repositoryType ?? throw new BackupsException("Invalid Repository Type");
         }
 
         public void AddFileToJobObjects(JobObject newObject)
