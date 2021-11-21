@@ -28,8 +28,8 @@ namespace Backups.Tests
             _backupJob.CreateRestorePoint();
             _backupJob.RemoveFileFromJobObjects(file2);
             _backupJob.CreateRestorePoint();
-            Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
             int storageAmount = _backupJob.GetRestorePoints().Sum(point => point.Rep.GetStorages().Count);
+            Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
             Assert.AreEqual(3, storageAmount);
         }
 
