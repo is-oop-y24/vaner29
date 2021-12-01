@@ -24,6 +24,6 @@ namespace Banks.Entities
         public void ChangeSubscriptionState(bool newState)
         {
             IsSubbed = newState;
-        }
+        }// trash
     }
 }

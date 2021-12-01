@@ -46,6 +46,6 @@ namespace Banks.Entities
         public void PayComission(decimal percentage)
         {
             // death
-        }
+        }//trash
     }
 }

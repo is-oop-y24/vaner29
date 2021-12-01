@@ -16,5 +16,5 @@ namespace Banks.Entities
         public string Name { get; private set; }
         public Guid Id { get; private set; }
         public int CreditReminderPercentage { get; private set; }
-    }
+    } // trash
 }

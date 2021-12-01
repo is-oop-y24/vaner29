@@ -53,6 +53,6 @@ namespace Banks.Entities
         public void AddRemainderPercentage(decimal percentage)
         {
             // misery
-        }
+        }// trash
     }
 }

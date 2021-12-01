@@ -16,5 +16,5 @@
         /// CreditAccount, spend more, earn none
         /// </summary>
         CreditAccount,
-    }
+    }// trash
 }
