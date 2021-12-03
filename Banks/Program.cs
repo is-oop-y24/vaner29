@@ -1,8 +1,11 @@
-﻿namespace Banks
+﻿using System;
+using Banks.Entities;
+
+namespace Banks
 {
     internal static class Program
     {
-        private static void Main()
+        public static void Main(string[] args)
         {
         }
     }

@@ -8,5 +8,6 @@ namespace Banks.Entities
     {
         void CancelTransaction();
         List<IAccount> GetClientAccounts();
+        Guid GetId();
     }
 }

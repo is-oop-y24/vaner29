@@ -8,9 +8,10 @@ namespace Banks.Interfaces
         void Withdraw(decimal sum);
         void Transfer(decimal sum, IAccount targetAccount);
         Guid GetAccountId();
-        /* (int GetAccountAge();
-        int GetYearlyPercentage();
+
+        Guid GetClientId();
+
+        void IncrementDays(int days);
         decimal GetCurrentMoney();
-        decimal GetCurrentRemainder(); */
     }
 }

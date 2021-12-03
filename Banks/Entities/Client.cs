@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using Banks.Tools;
 
 namespace Banks.Entities
 {
@@ -8,22 +11,33 @@ namespace Banks.Entities
         {
             Name = name;
             Surname = surname;
-            PassportId = 0;
-            Address = "none";
-            IsSubbed = false;
         }
 
         public string Name { get; private set; }
         public string Surname { get; private set; }
-        public int PassportId { get; private set; }
-        public string Address { get; private set; }
-        public bool IsSubbed { get; private set; }
-        public List<string> NewsLogs { get; private set; }
-        public List<Transaction> Transactions { get; private set; }
-
-        public void ChangeSubscriptionState(bool newState)
+        public ulong PassportId { get; private set; } = 0;
+        public string Address { get; private set; } = "none";
+        public Guid Id { get; private set; } = Guid.NewGuid();
+        public bool IsSubbed { get; private set; } = false;
+        public List<string> NewsLogs { get; private set; } = new List<string>();
+        public void UpdateSubscription(bool newState)
         {
             IsSubbed = newState;
+        }
+
+        public void UpdatePassport(ulong newPassport)
+        {
+            PassportId = newPassport;
+        }
+
+        public void UpdateAddress(string newAddress)
+        {
+            Address = newAddress;
+        }
+
+        public void AddToLog(string notification)
+        {
+            NewsLogs.Add(notification);
         }
     }
 }

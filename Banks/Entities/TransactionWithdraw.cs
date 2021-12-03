@@ -31,5 +31,10 @@ namespace Banks.Entities
         {
             return ClientAccounts;
         }
+
+        public Guid GetId()
+        {
+            return TransactionId;
+        }
     }
 }

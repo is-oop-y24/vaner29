@@ -7,12 +7,14 @@ namespace Banks.Entities
 {
     public class DebitAccount : IAccount
     {
-        public DebitAccount(decimal money, int percentage)
+        public DebitAccount(decimal money, int percentage, Guid clientId)
         {
             Money = money;
+            ClientId = clientId;
             Percentage = percentage;
         }
 
+        public Guid ClientId { get; private set; }
         public Guid Id { get; } = Guid.NewGuid();
         public int Percentage { get; private set; }
         public decimal Remainder { get; private set; } = 0;
@@ -34,13 +36,18 @@ namespace Banks.Entities
         {
             if (Money - sum < 0)
                 throw new BankException("Not enough money in the account");
-            Money -= sum;
+            Withdraw(sum);
             targetAccount.Put(sum);
         }
 
         public Guid GetAccountId()
         {
             return Id;
+        }
+
+        public Guid GetClientId()
+        {
+            return ClientId;
         }
 
         public void IncrementDays(int days)
@@ -56,6 +63,11 @@ namespace Banks.Entities
                     Remainder = 0;
                 }
             }
+        }
+
+        public decimal GetCurrentMoney()
+        {
+            return Money;
         }
 
         public void UpdatePercentage(int newPercentage)

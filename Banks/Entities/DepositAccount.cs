@@ -6,13 +6,15 @@ namespace Banks.Entities
 {
     public class DepositAccount : IAccount
     {
-        public DepositAccount(decimal money, int accountTerm, int percentage)
+        public DepositAccount(decimal money, int accountTerm, int percentage, Guid clientId)
         {
+            ClientId = clientId;
             AccountTerm = accountTerm;
             Money = money;
             Percentage = percentage;
         }
 
+        public Guid ClientId { get; private set; }
         public Guid Id { get; } = Guid.NewGuid();
         public int AccountAge { get; private set; } = 0;
         public int AccountTerm { get; private set; }
@@ -48,6 +50,11 @@ namespace Banks.Entities
             return Id;
         }
 
+        public Guid GetClientId()
+        {
+            return ClientId;
+        }
+
         public void UpdatePercentage(int newPercentage)
         {
             Percentage = newPercentage;
@@ -66,6 +73,11 @@ namespace Banks.Entities
                     Remainder = 0;
                 }
             }
+        }
+
+        public decimal GetCurrentMoney()
+        {
+            return Money;
         }
     }
 }

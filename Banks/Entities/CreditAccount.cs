@@ -6,15 +6,17 @@ namespace Banks.Entities
 {
     public class CreditAccount : IAccount
     {
-        public CreditAccount(decimal money, int percentage, int limit)
+        public CreditAccount(decimal money, int percentage, decimal limit, Guid clientId)
         {
+            ClientId = clientId;
             CreditLimit = limit;
             Money = money;
             CommissionPercentage = percentage;
         }
 
+        public Guid ClientId { get; private set; }
         public Guid Id { get; private set; } = Guid.NewGuid();
-        public int CreditLimit { get; private set; }
+        public decimal CreditLimit { get; private set; }
         public int CommissionPercentage { get; private set; }
         public int AccountAge { get; private set; } = 0;
         public decimal Money { get; private set; }
@@ -43,6 +45,11 @@ namespace Banks.Entities
             return Id;
         }
 
+        public Guid GetClientId()
+        {
+            return ClientId;
+        }
+
         public void IncrementDays(int days)
         {
             while (days > 0)
@@ -54,6 +61,11 @@ namespace Banks.Entities
                     Money -= Money * CommissionPercentage / 100;
                 }
             }
+        }
+
+        public decimal GetCurrentMoney()
+        {
+            return Money;
         }
     }
 }

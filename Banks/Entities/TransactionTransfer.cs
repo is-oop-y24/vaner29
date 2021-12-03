@@ -11,8 +11,8 @@ namespace Banks.Entities
         {
             MoneyUsed = moneyUsed;
             BankId = bankId;
-            ClientAccounts[0] = clientAccount;
-            ClientAccounts[1] = targetAccount;
+            ClientAccounts.Add(clientAccount);
+            ClientAccounts.Add(targetAccount);
         }
 
         public Guid BankId { get; }
@@ -32,6 +32,11 @@ namespace Banks.Entities
         public List<IAccount> GetClientAccounts()
         {
             return ClientAccounts;
+        }
+
+        public Guid GetId()
+        {
+            return TransactionId;
         }
     }
 }
