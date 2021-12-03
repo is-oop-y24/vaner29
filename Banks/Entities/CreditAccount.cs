@@ -1,26 +1,23 @@
 ﻿using System;
+using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
     public class CreditAccount : IAccount
     {
-        private readonly Guid _id;
-        public CreditAccount(decimal money, int percentage)
+        public CreditAccount(decimal money, int percentage, int limit)
         {
+            CreditLimit = limit;
             Money = money;
-            Percentage = percentage;
-
-            // RemainderPercentage = 0;
-            _id = Guid.NewGuid();
-            AccountAge = 0;
+            CommissionPercentage = percentage;
         }
 
-        public int Percentage { get; private set; }
-        public int AccountAge { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
+        public int CreditLimit { get; private set; }
+        public int CommissionPercentage { get; private set; }
+        public int AccountAge { get; private set; } = 0;
         public decimal Money { get; private set; }
-
-        // public decimal RemainderPercentage { get; private set; }
         public void Put(decimal sum)
         {
             Money += sum;
@@ -28,27 +25,35 @@ namespace Banks.Entities
 
         public void Withdraw(decimal sum)
         {
-            if (Money < sum)
-                throw new BankException("Not enough money in the bank account");
+            if (Money - sum < -CreditLimit)
+                    throw new BankException("Can't go below the credit limit");
             Money -= sum;
         }
 
         public void Transfer(decimal sum, IAccount targetAccount)
         {
-            if (Money < sum)
-                throw new BankException("Not enough money in the bank account");
+            if (Money - sum < -CreditLimit)
+                    throw new BankException("Can't go below the credit limit");
             Money -= sum;
             targetAccount.Put(sum);
         }
 
-        public AccountType GetAccountType()
+        public Guid GetAccountId()
         {
-            return AccountType.CreditAccount;
+            return Id;
         }
 
-        public void AddRemainderPercentage(decimal percentage)
+        public void IncrementDays(int days)
         {
-            // pain
-        }// trash
+            while (days > 0)
+            {
+                AccountAge++;
+                days--;
+                if (AccountAge % 30 == 0 && Money < 0)
+                {
+                    Money -= Money * CommissionPercentage / 100;
+                }
+            }
+        }
     }
 }

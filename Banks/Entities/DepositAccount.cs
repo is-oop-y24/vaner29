@@ -1,26 +1,24 @@
 ﻿using System;
+using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
     public class DepositAccount : IAccount
     {
-        private readonly Guid _id;
-        public DepositAccount(decimal money, int accountTerm)
+        public DepositAccount(decimal money, int accountTerm, int percentage)
         {
             AccountTerm = accountTerm;
             Money = money;
-
-            // RemainderPercentage = 0;
-            _id = Guid.NewGuid();
-            AccountAge = 0;
+            Percentage = percentage;
         }
 
-        public int AccountAge { get; private set; }
+        public Guid Id { get; } = Guid.NewGuid();
+        public int AccountAge { get; private set; } = 0;
         public int AccountTerm { get; private set; }
+        public decimal Remainder { get; private set; } = 0;
+        public int Percentage { get; private set; }
         public decimal Money { get; private set; }
-
-        // public decimal RemainderPercentage { get; private set; }
         public void Put(decimal sum)
         {
             Money += sum;
@@ -45,14 +43,29 @@ namespace Banks.Entities
             targetAccount.Put(sum);
         }
 
-        public AccountType GetAccountType()
+        public Guid GetAccountId()
         {
-            return AccountType.DepositAccount;
+            return Id;
         }
 
-        public void AddRemainderPercentage(decimal percentage)
+        public void UpdatePercentage(int newPercentage)
         {
-            // misery
-        }// trash
+            Percentage = newPercentage;
+        }
+
+        public void IncrementDays(int days)
+        {
+            while (days > 0 && AccountAge <= AccountTerm)
+            {
+                AccountAge++;
+                Remainder += Money * Percentage / 100 / 365;
+                days--;
+                if (AccountAge % 30 == 0)
+                {
+                    Money += Remainder;
+                    Remainder = 0;
+                }
+            }
+        }
     }
 }

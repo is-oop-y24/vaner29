@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Banks.Interfaces;
 
 namespace Banks.Entities
 {
     public class Bank
     {
-        private Dictionary<Client, List<IAccount>> _clientsAndAccounts;
+        private IReadOnlyDictionary<Client, List<IAccount>> _clientsAndAccounts;
         public Bank(string name)
         {
             Name = name;
@@ -15,6 +16,6 @@ namespace Banks.Entities
 
         public string Name { get; private set; }
         public Guid Id { get; private set; }
-        public int CreditReminderPercentage { get; private set; }
-    } // trash
+        public int CreditRemainderPercentage { get; private set; }
+    }
 }

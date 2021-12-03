@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
+using Banks.Interfaces;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
     public class DebitAccount : IAccount
     {
-        private readonly Guid _id;
-        public DebitAccount(decimal money, int limit)
+        public DebitAccount(decimal money, int percentage)
         {
-            DebitLimit = limit;
             Money = money;
-            _id = Guid.NewGuid();
-            AccountAge = 0;
+            Percentage = percentage;
         }
 
-        public int DebitLimit { get; private set; }
-
-        public int AccountAge { get; private set; }
+        public Guid Id { get; } = Guid.NewGuid();
+        public int Percentage { get; private set; }
+        public decimal Remainder { get; private set; } = 0;
+        public int AccountAge { get; private set; } = 0;
         public decimal Money { get; private set; }
         public void Put(decimal sum)
         {
@@ -25,27 +25,42 @@ namespace Banks.Entities
 
         public void Withdraw(decimal sum)
         {
-            if (Money - sum < -DebitLimit)
-                throw new BankException("Can't go below Debit Limit");
+            if (Money - sum < 0)
+                throw new BankException("Not enough money in the account");
             Money -= sum;
         }
 
         public void Transfer(decimal sum, IAccount targetAccount)
         {
-            if (Money - sum < -DebitLimit)
-                throw new BankException("Can't go below Debit Limit");
+            if (Money - sum < 0)
+                throw new BankException("Not enough money in the account");
             Money -= sum;
             targetAccount.Put(sum);
         }
 
-        public AccountType GetAccountType()
+        public Guid GetAccountId()
         {
-            return AccountType.DebitAccount;
+            return Id;
         }
 
-        public void PayComission(decimal percentage)
+        public void IncrementDays(int days)
         {
-            // death
-        }//trash
+            while (days > 0)
+            {
+                AccountAge++;
+                Remainder += Money * Percentage / 100 / 365;
+                days--;
+                if (AccountAge % 30 == 0)
+                {
+                    Money += Remainder;
+                    Remainder = 0;
+                }
+            }
+        }
+
+        public void UpdatePercentage(int newPercentage)
+        {
+            Percentage = newPercentage;
+        }
     }
 }
