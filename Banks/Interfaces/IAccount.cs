@@ -13,5 +13,7 @@ namespace Banks.Interfaces
 
         void IncrementDays(int days);
         decimal GetCurrentMoney();
+        int GetAccountAge();
+        string GetAccountType();
     }
 }

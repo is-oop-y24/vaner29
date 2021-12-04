@@ -42,15 +42,22 @@ namespace Banks.Entities
             DepositPercentageRanges = depositPercentageRanges;
         }
 
-        public string Name { get; private set; }
-        public bool PassportNeeded { get; private set; }
-        public bool AddressNeeded { get; private set; }
-        public decimal SusLimit { get; private set; }
-        public int DebitRemainderPercentage { get; private set; }
-        public decimal CreditLimit { get; private set; }
-        public int CreditCommissionPercentage { get; private set; }
-        public int DepositTerm { get; private set; }
-        public List<DepositPercentageRange> DepositPercentageRanges { get; private set; }
+        public BankSettings()
+        {
+        }
+
+        public string Name { get; private set; } = "Sber";
+        public bool PassportNeeded { get; private set; } = true;
+        public bool AddressNeeded { get; private set; } = true;
+        public decimal SusLimit { get; private set; } = 100;
+        public int DebitRemainderPercentage { get; private set; } = 36500;
+        public decimal CreditLimit { get; private set; } = 200;
+        public int CreditCommissionPercentage { get; private set; } = 36500;
+        public int DepositTerm { get; private set; } = 361;
+
+        public List<DepositPercentageRange> DepositPercentageRanges { get; private set; } =
+            new List<DepositPercentageRange>
+                { new DepositPercentageRange(0, 500, 365), new DepositPercentageRange(501, decimal.MaxValue, 36500) };
 
         public void UpdateName(string newName)
         {

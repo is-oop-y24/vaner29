@@ -67,5 +67,15 @@ namespace Banks.Entities
         {
             return Money;
         }
+
+        public int GetAccountAge()
+        {
+            return AccountAge;
+        }
+
+        public string GetAccountType()
+        {
+            return "Credit Account";
+        }
     }
 }

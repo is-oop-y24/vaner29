@@ -23,6 +23,9 @@ namespace Banks.Entities
             Id = bank.Id;
         }
 
+        public IReadOnlyList<ITransaction> Transactions => _transactions;
+        public IReadOnlyList<IAccount> Accounts => _accounts;
+
         public Guid Id { get; private set; } = Guid.NewGuid();
         public BankSettings Settings { get; private set; }
 
@@ -205,6 +208,11 @@ namespace Banks.Entities
         {
             Settings.UpdateDepositRanges(newRanges);
             NotifySubscribers("Deposit Percentage Ranges was updated");
+        }
+
+        public Client GetClientById(Guid id)
+        {
+            return _clients.Find(x => x.Id == id);
         }
     }
 }

@@ -70,6 +70,16 @@ namespace Banks.Entities
             return Money;
         }
 
+        public int GetAccountAge()
+        {
+            return AccountAge;
+        }
+
+        public string GetAccountType()
+        {
+            return "Debit Account";
+        }
+
         public void UpdatePercentage(int newPercentage)
         {
             Percentage = newPercentage;

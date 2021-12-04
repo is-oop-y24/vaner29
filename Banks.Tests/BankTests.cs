@@ -146,7 +146,23 @@ namespace Banks.Tests
             _centralBank.TransferBetweenBanks(_bank.Id, _bank2.Id, 1, glebAcc.GetAccountId(), pudgeAcc.GetAccountId());
             Assert.AreEqual(0, glebAcc.GetCurrentMoney());
             Assert.AreEqual(2, pudgeAcc.GetCurrentMoney());
-            
+        }
+        
+        [Test]
+        public void TransferBetweenBanks_Cancel_CheckResults()
+        {
+            var gleb = new Client("gleb", "grep");
+            var pudge = new Client("pudge", "dire");
+            _centralBank.GetBankById(_bank.Id).AddClient(gleb);
+            _bank.AddDebitAccount(gleb.Id, 1);
+            IAccount glebAcc = _centralBank.GetBankById(_bank.Id).GetAllClientAccounts(gleb.Id)[0];
+            _centralBank.GetBankById(_bank2.Id).AddClient(pudge);
+            _bank2.AddDebitAccount(pudge.Id, 1);
+            IAccount pudgeAcc = _centralBank.GetBankById(_bank2.Id).GetAllClientAccounts(pudge.Id)[0];
+            _centralBank.TransferBetweenBanks(_bank.Id, _bank2.Id, 1, glebAcc.GetAccountId(), pudgeAcc.GetAccountId());
+            _centralBank.GetBankById(_bank.Id).CancelTransaction(_bank.GetAllClientTransactions(gleb.Id)[0].GetId());
+            Assert.AreEqual(1, glebAcc.GetCurrentMoney());
+            Assert.AreEqual(1, pudgeAcc.GetCurrentMoney());
         }
     }
 }
