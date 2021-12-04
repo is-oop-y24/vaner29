@@ -14,6 +14,8 @@ namespace Banks.Entities
 
         public Bank(BankSettings settings)
         {
+            if (settings == null)
+                throw new BankException("Settings can't be null");
             Settings = settings;
         }
 

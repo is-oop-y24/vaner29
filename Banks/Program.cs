@@ -15,10 +15,10 @@ namespace Banks
             {
                 ConsoleColor color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("1. Создать дефолтный банк \t 2. Создать кастомный банк  \t 3. Создать клиента");
-                Console.WriteLine("4. Создать счёт \t 5. Произвести/Отменить транзакцию \t 6. Пропустить дни");
-                Console.WriteLine("7. Изменить настройки банка \t 8. Проверить состояние клиента \t 9. Проверить состояние банка");
-                Console.WriteLine("10. Выйти из программы");
+                Console.WriteLine("1. Создать банк  \t 2. Создать клиента");
+                Console.WriteLine("3. Создать счёт \t 4. Произвести/Отменить транзакцию \t 5. Пропустить дни");
+                Console.WriteLine("6. Изменить настройки банка \t 7. Проверить состояние клиента \t 8. Проверить состояние банка");
+                Console.WriteLine("9. Выйти из программы");
                 Console.WriteLine("Введите номер пункта:");
                 Console.ForegroundColor = color;
                 try
@@ -28,33 +28,30 @@ namespace Banks
                     switch (command)
                     {
                         case 1:
-                            CreateDefaultBank(centralBank);
-                            break;
-                        case 2:
                             CreateBank(centralBank);
                             break;
-                        case 3:
+                        case 2:
                             CreateClient(centralBank);
                             break;
-                        case 4:
+                        case 3:
                             CreateAccount(centralBank);
                             break;
-                        case 5:
+                        case 4:
                             MakeTransaction(centralBank);
                             break;
-                        case 6:
+                        case 5:
                             SkipDays(centralBank);
                             break;
-                        case 7:
+                        case 6:
                             UpdateBank(centralBank);
                             break;
-                        case 8:
+                        case 7:
                             CheckClient(centralBank);
                             break;
-                        case 9:
+                        case 8:
                             CheckBank(centralBank);
                             break;
-                        case 10:
+                        case 9:
                             alive = false;
                             continue;
                     }
@@ -67,12 +64,6 @@ namespace Banks
                     Console.ForegroundColor = color;
                 }
             }
-        }
-
-        private static void CreateDefaultBank(CentralBank centralBank)
-        {
-            centralBank.AddBank(new BankSettings());
-            Console.WriteLine("id банка: " + centralBank.Banks.Last().Id);
         }
 
         private static void CreateBank(CentralBank centralBank)
