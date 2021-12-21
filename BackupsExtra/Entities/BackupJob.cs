@@ -17,7 +17,7 @@ namespace BackupsExtra.Entities
         private IStorageType _storageType;
         private IRepositoryType _repositoryType;
         private IPointRule _retentionRule;
-        private ILogger _loggerType;
+        private ILogger _loggerType = new LoggerConsole(true);
         private IRemovalType _removalType;
 
         public BackupJob()
