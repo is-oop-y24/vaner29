@@ -5,20 +5,12 @@ using BackupsExtra.Interfaces;
 
 namespace BackupsExtra.Entities
 {
-    public class PointHybridRuleAllOf : IPointRule
+    public class PointHybridRuleAllOf : IHybridRuleStrategy
     {
-        public PointHybridRuleAllOf(IHybridRuleStrategy strategy, List<IPointRule> pointRules)
+        public List<RestorePoint> RuleResult(List<RestorePoint> restorePoints, List<IPointRule> pointRules)
         {
-            PointRules = pointRules;
-            Strategy = strategy;
-        }
-
-        public IHybridRuleStrategy Strategy { get; }
-        public List<IPointRule> PointRules { get; }
-        public List<RestorePoint> RuleResult(List<RestorePoint> restorePoints)
-        {
-            var ruleResult = restorePoints;
-            foreach (var rule in PointRules)
+            List<RestorePoint> ruleResult = restorePoints;
+            foreach (IPointRule rule in pointRules)
             {
                 ruleResult = ruleResult.Intersect(rule.RuleResult(ruleResult)).ToList();
             }

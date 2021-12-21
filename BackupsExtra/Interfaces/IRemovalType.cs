@@ -5,6 +5,6 @@ namespace BackupsExtra.Interfaces
 {
     public interface IRemovalType
     {
-        void Clean(List<RestorePoint> restorePoints);
+        List<RestorePoint> Clean(List<RestorePoint> restorePoints, List<RestorePoint> pointsToKeep);
     }
 }

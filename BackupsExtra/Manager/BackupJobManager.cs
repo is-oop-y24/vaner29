@@ -20,14 +20,14 @@ namespace BackupsExtra.Manager
         public void AddBackupJob(BackupJob job)
         {
             if (job == null)
-                throw new BackupsException("Can't add a null backup job to manager");
+                throw new BackupsExtraException("Can't add a null backup job to manager");
             _backupJobs.Add(job);
         }
 
         public BackupJob GetJobById(Guid id)
         {
             if (_backupJobs.FirstOrDefault(x => x.Id == id) == null)
-                throw new BackupsException("Can't find a backup job with this Id");
+                throw new BackupsExtraException("Can't find a backup job with this Id");
             return _backupJobs.FirstOrDefault(x => x.Id == id);
         }
 

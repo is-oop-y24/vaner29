@@ -7,12 +7,14 @@ namespace BackupsExtra.Entities
 {
     public class RemoveDelete : IRemovalType
     {
-        public void Clean(List<RestorePoint> restorePoints)
+        public List<RestorePoint> Clean(List<RestorePoint> restorePoints, List<RestorePoint> pointsToKeep)
         {
-            foreach (var point in restorePoints)
+            foreach (RestorePoint point in restorePoints.Except(pointsToKeep))
             {
-                Directory.Delete(@"C:\Users\PC\BackUpJob\RestorePoint_" + point.Id);
+                Directory.Delete(point.FullName);
             }
+
+            return pointsToKeep;
         }
     }
 }

@@ -2,18 +2,18 @@
 
 namespace BackupsExtra.Tools
 {
-    public class BackupsException : Exception
+    public class BackupsExtraException : Exception
     {
-        public BackupsException()
+        public BackupsExtraException()
             {
             }
 
-        public BackupsException(string message)
+        public BackupsExtraException(string message)
                 : base(message)
             {
             }
 
-        public BackupsException(string message, Exception innerException)
+        public BackupsExtraException(string message, Exception innerException)
                 : base(message, innerException)
             {
             }
