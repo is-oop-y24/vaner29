@@ -13,15 +13,16 @@ namespace BackupsExtra.Entities
     public class BackupJob
     {
         private List<RestorePoint> _restorePoints = new List<RestorePoint>();
-        private string _path = @"C:\Users\PC\BackUpJob";
+        private string _path;
         private IStorageType _storageType;
         private IRepositoryType _repositoryType;
         private IPointRule _retentionRule;
         private ILogger _loggerType = new LoggerConsole(true);
         private IRemovalType _removalType;
 
-        public BackupJob()
+        public BackupJob(string path)
         {
+            _path = path;
             FileList = new List<JobObject>();
         }
 
@@ -102,21 +103,6 @@ namespace BackupsExtra.Entities
         public RestorePoint GetRestorePointById(Guid id)
         {
             return _restorePoints.FirstOrDefault(point => point.Id == id);
-        }
-
-        public void RecoverFilesToPreviousLocation(Guid restorePointId)
-        {
-            foreach (Storage storage in GetRestorePointById(restorePointId).Rep.GetStorages())
-            {
-                ZipArchive archive = ZipFile.OpenRead(storage.ArchivePath);
-                foreach (JobObject file in storage.GetFiles())
-                {
-                    File.Delete(file.Name);
-                    archive.Entries.FirstOrDefault(x => x.Name == Path.GetFileName(file.Name)).ExtractToFile(file.Name);
-                }
-            }
-
-            _loggerType.LogChanges("Files from restore point were recovered");
         }
 
         public void CleanRestorePoints()
