@@ -11,7 +11,7 @@ namespace BackupsExtra.Entities
         {
             if (path != null)
                 Directory.CreateDirectory(path);
-            foreach (Storage storage in restorePoint.Rep.GetStorages())
+            foreach (Storage storage in restorePoint.Repository.GetStorages())
             {
                 ZipArchive archive = ZipFile.OpenRead(storage.ArchivePath);
                 foreach (JobObject file in storage.GetFiles())

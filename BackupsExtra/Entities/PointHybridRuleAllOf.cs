@@ -9,13 +9,13 @@ namespace BackupsExtra.Entities
     {
         public List<RestorePoint> RuleResult(List<RestorePoint> restorePoints, List<IPointRule> pointRules)
         {
-            List<RestorePoint> ruleResult = restorePoints;
+            IEnumerable<RestorePoint> ruleResult = restorePoints;
             foreach (IPointRule rule in pointRules)
             {
-                ruleResult = ruleResult.Intersect(rule.RuleResult(ruleResult)).ToList();
+                ruleResult = ruleResult.Intersect(rule.RuleResult(restorePoints));
             }
 
-            return ruleResult;
+            return ruleResult.ToList();
         }
     }
 }

@@ -8,27 +8,23 @@ namespace BackupsExtra.Entities
 {
     public class RestorePoint
     {
-        public RestorePoint(List<JobObject> jobObjects, IStorageType storageType, IRepositoryType repositoryType, Guid id, string path)
+        public RestorePoint(IRepositoryType repository, Guid id, string fullName)
         {
-            if (jobObjects.Count == 0)
-                throw new BackupsExtraException("No Files");
-            FullName = path + $"{Path.DirectorySeparatorChar}RestorePoint_" + id;
+            FullName = fullName;
             Time = DateTime.Now;
-            Rep = repositoryType.CreateRepository(jobObjects, storageType, FullName);
+            Repository = repository;
         }
 
-        public RestorePoint(List<JobObject> jobObjects, IStorageType storageType, IRepositoryType repositoryType, Guid id, string path, DateTime time)
+        public RestorePoint(IRepositoryType repository, Guid id, string fullName, DateTime time)
         {
-            if (jobObjects.Count == 0)
-                throw new BackupsExtraException("No Files");
-            FullName = path + $"{Path.DirectorySeparatorChar}RestorePoint_" + id;
+            FullName = fullName;
             Time = time;
-            Rep = repositoryType.CreateRepository(jobObjects, storageType, FullName);
+            Repository = repository;
         }
 
         public DateTime Time { get; private set; }
         public Guid Id { get; } = Guid.NewGuid();
         public string FullName { get; }
-        public IRepositoryType Rep { get; private set; }
+        public IRepositoryType Repository { get; private set; }
     }
 }

@@ -12,9 +12,9 @@ namespace BackupsExtra.Entities
         {
             foreach (RestorePoint point in restorePoints.Except(pointsToKeep))
             {
-                foreach (Storage storage in point.Rep.GetStorages())
+                foreach (Storage storage in point.Repository.GetStorages())
                 {
-                    foreach (JobObject file in storage.GetFiles().Where(file => pointsToKeep[0].Rep.GetStorages().Find(stor =>
+                    foreach (JobObject file in storage.GetFiles().Where(file => pointsToKeep[0].Repository.GetStorages().Find(stor =>
                                  stor.GetFiles().Find(obj => obj.Name == file.Name) == null) == null))
                     {
                         using ZipArchive archive = ZipFile.Open(storage.ArchivePath, ZipArchiveMode.Update);

@@ -13,7 +13,7 @@ namespace BackupsExtra.Tests
         [SetUp]
         public void Setup()
         {
-            _backupJob = new BackupJob();
+            _backupJob = new BackupJob(@"C:\Users\PC\BackUpJob", new SingleStorage(), new RepositoryNoFiles(), new PointNumberRule(10), new LoggerConsole(false), new RemoveDelete());
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace BackupsExtra.Tests
             _backupJob.CreateRestorePoint();
             _backupJob.RemoveFileFromJobObjects(file2);
             _backupJob.CreateRestorePoint();
-            int storageAmount = _backupJob.GetRestorePoints().Sum(point => point.Rep.GetStorages().Count);
-            Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
+            int storageAmount = _backupJob.RestorePoints.Sum(point => point.Repository.GetStorages().Count);
+            Assert.AreEqual(2, _backupJob.RestorePoints.Count);
             Assert.AreEqual(3, storageAmount);
         }
 
@@ -43,8 +43,8 @@ namespace BackupsExtra.Tests
             _backupJob.CreateRestorePoint();
             _backupJob.RemoveFileFromJobObjects(file2);
             _backupJob.CreateRestorePoint();
-            Assert.AreEqual(2, _backupJob.GetRestorePoints().Count);
-            int storageAmount = _backupJob.GetRestorePoints().Sum(point => point.Rep.GetStorages().Count);
+            Assert.AreEqual(2, _backupJob.RestorePoints.Count);
+            int storageAmount = _backupJob.RestorePoints.Sum(point => point.Repository.GetStorages().Count);
             Assert.AreEqual(2, storageAmount);
         }
 

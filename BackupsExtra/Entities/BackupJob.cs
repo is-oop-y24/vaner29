@@ -17,31 +17,32 @@ namespace BackupsExtra.Entities
         private IStorageType _storageType;
         private IRepositoryType _repositoryType;
         private IPointRule _retentionRule;
-        private ILogger _loggerType = new LoggerConsole(true);
+        private ILogger _loggerType;
         private IRemovalType _removalType;
+        private List<JobObject> _fileList;
 
-        public BackupJob(string path)
+        public BackupJob(string path, IStorageType storageType, IRepositoryType repositoryType, IPointRule retentionRule, ILogger loggerType, IRemovalType removalType)
         {
             _path = path;
-            FileList = new List<JobObject>();
+            _storageType = storageType;
+            _repositoryType = repositoryType;
+            _retentionRule = retentionRule;
+            _loggerType = loggerType;
+            _removalType = removalType;
+            _fileList = new List<JobObject>();
         }
 
         public Guid Id { get; } = Guid.NewGuid();
         public IReadOnlyCollection<RestorePoint> RestorePoints => _restorePoints.OrderBy(x => x.Time).ToList();
-
-        public List<JobObject> FileList { get; private set; }
-
         public void CreateRestorePoint()
         {
-            if (FileList.Count == 0)
+            if (_fileList.Count == 0)
                 throw new BackupsExtraException("No files exist");
-            _restorePoints.Add(new RestorePoint(FileList, _storageType, _repositoryType, Guid.NewGuid(), _path));
-            _loggerType.LogChanges("Restore Point Created");
-        }
-
-        public List<RestorePoint> GetRestorePoints()
-        {
-            return _restorePoints;
+            var id = Guid.NewGuid();
+            string path = _path + $"{Path.DirectorySeparatorChar}RestorePoint_" + id;
+            IRepositoryType repository = _repositoryType.CreateRepository(_fileList, _storageType, path);
+            _restorePoints.Add(new RestorePoint(repository, id, _path));
+            _loggerType.LogChanges("Restore Point " + id + " Created");
         }
 
         public void SetStorageType(IStorageType storageType)
@@ -78,7 +79,7 @@ namespace BackupsExtra.Entities
         {
             if (newObject == null)
                 throw new BackupsExtraException("Object is invalid");
-            FileList.Add(newObject);
+            _fileList.Add(newObject);
         }
 
         public void AddMultipleFilesToJobObjects(List<JobObject> newObjects)
@@ -87,7 +88,7 @@ namespace BackupsExtra.Entities
                 throw new BackupsExtraException("No files exist");
             foreach (JobObject obj in newObjects)
             {
-                FileList.Add(obj);
+                _fileList.Add(obj);
             }
         }
 
@@ -95,9 +96,9 @@ namespace BackupsExtra.Entities
         {
             if (obj == null)
                 throw new BackupsExtraException("Object is invalid");
-            if (!FileList.Contains(obj))
+            if (!_fileList.Contains(obj))
                 throw new BackupsExtraException("File was not added to JobOjbects");
-            FileList.Remove(obj);
+            _fileList.Remove(obj);
         }
 
         public RestorePoint GetRestorePointById(Guid id)
